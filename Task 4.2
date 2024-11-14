@@ -1,0 +1,215 @@
+index.html........................................................................................................................................................................
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enhanced To-Do List App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>To-Do List</h1>
+        <form id="task-form">
+            <input type="text" id="task-input" placeholder="Add a new task..." required>
+            <input type="date" id="due-date" required>
+            <select id="priority" required>
+                <option value="" disabled selected>Priority</option>
+                <option value="High">High</option>
+                <option value="Medium">Medium</option>
+                <option value="Low">Low</option>
+            </select>
+            <button type="submit">Add Task</button>
+        </form>
+        <ul id="task-list"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+styles.css....................................................................................................................................................................
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 400px;
+    margin: 50px auto;
+    background: #fff;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+input[type="text"], input[type="date"], select {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background: #218838;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    padding: 15px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    margin-top: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+li span {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+li button {
+    background: #dc3545;
+}
+
+li button:hover {
+    background: #c82333;
+}
+
+.priority-high {
+    color: #dc3545; /* Red for high priority */
+}
+
+.priority-medium {
+    color: #ffc107; /* Yellow for medium priority */
+}
+
+.priority-low {
+    color: #28a745; /* Green for low priority */
+}
+
+
+
+script.js....................................................................................................................................................................
+
+document.addEventListener('DOMContentLoaded', loadTasks); // Load tasks on page load
+
+const taskForm = document.getElementById('task-form');
+const taskInput = document.getElementById('task-input');
+const dueDateInput = document.getElementById('due-date');
+const priorityInput = document.getElementById('priority');
+const taskList = document.getElementById('task-list');
+
+// Add event listener for form submission
+taskForm.addEventListener('submit', addTask);
+
+// Function to add a task
+function addTask(event) {
+    event.preventDefault(); // Prevent form submission
+
+    const taskText = taskInput.value;
+    const dueDate = dueDateInput.value;
+    const priority = priorityInput.value;
+    const taskId = Date.now(); // Generate a unique ID for the task
+
+    const task = {
+        id: taskId,
+        text: taskText,
+        dueDate: dueDate,
+        priority: priority
+    };
+
+    // Add task to the DOM
+    appendTaskToDOM(task);
+    saveTaskToLocalStorage(task);
+
+    // Clear input fields
+    taskInput.value = '';
+    dueDateInput.value = '';
+    priorityInput.selectedIndex = 0; // Reset priority select
+}
+
+// Function to append task to the DOM
+function appendTaskToDOM(task) {
+    const li = document.createElement('li');
+    
+    // Add task text
+    li.innerHTML = `
+        <span class="${getPriorityClass(task.priority)}">${task.text}</span>
+        <span>Due: ${new Date(task.dueDate).toLocaleDateString()}</span>
+    `;
+
+    // Create delete button
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => {
+        li.remove(); // Remove task from DOM
+        removeTaskFromLocalStorage(task.id); // Remove from localStorage
+    });
+
+    li.appendChild(deleteButton);
+    taskList.appendChild(li);
+}
+
+// Function to get priority class for styling
+function getPriorityClass(priority) {
+    return `priority-${priority.toLowerCase()}`; // Generate class based on priority
+}
+
+// Function to save task to localStorage
+function saveTaskToLocalStorage(task) {
+    const tasks = getTasksFromLocalStorage();
+    tasks.push(task);
+    localStorage.setItem('tasks', JSON.stringify(tasks)); // Save tasks array to localStorage
+}
+
+// Function to load tasks from localStorage
+function loadTasks() {
+    const tasks = getTasksFromLocalStorage();
+    tasks.forEach(task => appendTaskToDOM(task)); // Append each task to the DOM
+}
+
+// Function to get tasks from localStorage
+function getTasksFromLocalStorage() {
+    const tasks = localStorage.getItem('tasks');
+    return tasks ? JSON.parse(tasks) : []; // Return parsed tasks or empty array
+}
+
+// Function to remove task from localStorage
+function removeTaskFromLocalStorage(taskId) {
+    const tasks = getTasksFromLocalStorage();
+    const updatedTasks = tasks.filter(task => task.id !== taskId); // Filter out the deleted task
+    localStorage.setItem('tasks', JSON.stringify(updatedTasks)); // Save updated tasks to localStorage
+}
