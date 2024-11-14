@@ -1,0 +1,221 @@
+index.html...................................................................................................................................................................
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Your Name</h1>
+        <nav>
+            <div class="menu-icon" id="menu-icon">
+                &#9776; <!-- Hamburger icon -->
+            </div>
+            <ul id="nav-links">
+                <li><a href="#about">About</a></li>
+                <li><a href="#projects">Projects</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section id="about">
+        <h2>About Me</h2>
+        <p>A brief introduction about yourself goes here. Highlight your skills, experiences, and what you're passionate about.</p>
+    </section>
+
+    <section id="projects">
+        <h2>My Projects</h2>
+        <div class="project-container">
+            <div class="project">
+                <h3>Project 1</h3>
+                <p>Description of project 1.</p>
+            </div>
+            <div class="project">
+                <h3>Project 2</h3>
+                <p>Description of project 2.</p>
+            </div>
+            <div class="project">
+                <h3>Project 3</h3>
+                <p>Description of project 3.</p>
+            </div>
+            <!-- Add more projects as needed -->
+        </div>
+    </section>
+
+    <section id="contact">
+        <h2>Contact Me</h2>
+        <form>
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="message">Message:</label>
+            <textarea id="message" name="message" required></textarea>
+
+            <button type="submit">Send</button>
+        </form>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 Your Name. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+styles.css...................................................................................................................................................................
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+}
+
+header {
+    background: #333;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+}
+
+nav {
+    position: relative;
+}
+
+.menu-icon {
+    display: none; /* Hidden by default */
+    font-size: 30px;
+    cursor: pointer;
+    margin: 10px;
+}
+
+nav ul {
+    list-style: none;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+section {
+    padding: 20px;
+    margin: 10px;
+}
+
+.project-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.project {
+    background: #f4f4f4;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 15px;
+    flex: 1 1 calc(30% - 20px); /* Adjust for responsive design */
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    margin: 5px 0 5px;
+}
+
+input, textarea {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #555;
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background: #333;
+    color: #fff;
+}
+
+@media (max-width: 768px) {
+    .menu-icon {
+        display: block; /* Show hamburger icon on smaller screens */
+        text-align: right; /* Align the icon to the right */
+    }
+    
+    nav ul {
+        display: none; /* Hide links by default */
+        flex-direction: column; /* Stack links vertically */
+        background: #333; /* Add background for dropdown */
+        position: absolute; /* Positioning dropdown */
+        top: 50px; /* Below the menu icon */
+        right: 0;
+        width: 100%; /* Full width */
+    }
+
+    #nav-links.show {
+        display: flex; /* Show links when toggled */
+    }
+    
+    #nav-links li {
+        text-align: center; /* Center text in links */
+        margin: 10px 0; /* Margin for spacing */
+    }
+
+    .project {
+        flex: 1 1 calc(100% - 20px); /* Stack projects on smaller screens */
+    }
+}
+
+
+
+script.js....................................................................................................................................................................
+
+document.querySelector('form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting
+    alert('Thank you for your message!');
+});
+
+// Toggle navigation menu on hamburger click
+const menuIcon = document.getElementById('menu-icon');
+const navLinks = document.getElementById('nav-links');
+
+menuIcon.addEventListener('click', () => {
+    navLinks.classList.toggle('show'); // Toggle visibility of navigation links
+});
