@@ -1,0 +1,302 @@
+index.html.......................................................................................................................................................................
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Page</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Product Page</h1>
+        
+        <div class="filters">
+            <h2>Filters</h2>
+            <div class="filter-category">
+                <h3>Categories</h3>
+                <label>
+                    <input type="checkbox" class="category" value="electronics"> Electronics
+                </label>
+                <label>
+                    <input type="checkbox" class="category" value="clothing"> Clothing
+                </label>
+                <label>
+                    <input type="checkbox" class="category" value="books"> Books
+                </label>
+            </div>
+
+            <div class="filter-price">
+                <h3>Price Range</h3>
+                <input type="number" id="min-price" placeholder="Min Price" />
+                <input type="number" id="max-price" placeholder="Max Price" />
+            </div>
+
+            <div class="filter-rating">
+                <h3>Rating</h3>
+                <select id="rating">
+                    <option value="">Select Rating</option>
+                    <option value="5">5 Stars</option>
+                    <option value="4">4 Stars & up</option>
+                    <option value="3">3 Stars & up</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="sort">
+            <h2>Sort By</h2>
+            <select id="sort">
+                <option value="default">Default</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating-desc">Rating: High to Low</option>
+            </select>
+        </div>
+
+        <div class="product-list" id="product-list"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+styles.css....................................................................................................................................................................
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+.filters, .sort {
+    margin-bottom: 20px;
+    background: #e9ecef;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.filter-category, .filter-price, .filter-rating {
+    margin: 10px 0;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.product {
+    background: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    margin: 10px;
+    width: calc(30% - 20px); /* Three products per row */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.product:hover {
+    transform: scale(1.02);
+}
+
+.product img {
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+.product h3 {
+    font-size: 20px;
+    margin: 10px 0;
+    color: #007bff; /* Bootstrap primary color */
+}
+
+.product p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.product .rating {
+    color: #ff9800; /* Gold color for stars */
+}
+
+.product .buy-button {
+    background: #28a745; /* Green background */
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+}
+
+.product .buy-button:hover {
+    background: #218838; /* Darker green on hover */
+}
+
+@media (max-width: 768px) {
+    .product {
+        width: calc(45% - 20px); /* Two products per row on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .product {
+        width: calc(100% - 20px); /* One product per row on mobile */
+    }
+}
+
+
+
+script.js...................................................................................................................................................................
+
+const products = [
+    {
+        id: 1,
+        name: "Smartphone",
+        category: "electronics",
+        price: 699,
+        rating: 5,
+        description: "Latest smartphone with high-end features.",
+        image: "https://via.placeholder.com/150"
+    },
+    {
+        id: 2,
+        name: "Laptop",
+        category: "electronics",
+        price: 999,
+        rating: 4.5,
+        description: "Powerful laptop for work and play.",
+        image: "https://via.placeholder.com/150"
+    },
+    {
+        id: 3,
+        name: "T-shirt",
+        category: "clothing",
+        price: 19.99,
+        rating: 4,
+        description: "Comfortable cotton t-shirt available in various sizes.",
+        image: "https://via.placeholder.com/150"
+    },
+    {
+        id: 4,
+        name: "Jeans",
+        category: "clothing",
+        price: 49.99,
+        rating: 4.5,
+        description: "Stylish jeans that fit perfectly.",
+        image: "https://via.placeholder.com/150"
+    },
+    {
+        id: 5,
+        name: "Novel",
+        category: "books",
+        price: 9.99,
+        rating: 5,
+        description: "Bestselling novel that will keep you hooked.",
+        image: "https://via.placeholder.com/150"
+    },
+    {
+        id: 6,
+        name: "Cookbook",
+        category: "books",
+        price: 29.99,
+        rating: 4,
+        description: "Delicious recipes for every occasion.",
+        image: "https://via.placeholder.com/150"
+    },
+];
+
+document.addEventListener("DOMContentLoaded", () => {
+    displayProducts(products);
+
+    // Filter by category
+    const categoryCheckboxes = document.querySelectorAll('.category');
+    categoryCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', filterProducts);
+    });
+
+    // Filter by price
+    document.getElementById('min-price').addEventListener('input', filterProducts);
+    document.getElementById('max-price').addEventListener('input', filterProducts);
+
+    // Filter by rating
+    document.getElementById('rating').addEventListener('change', filterProducts);
+
+    // Sort products
+    document.getElementById('sort').addEventListener('change', sortProducts);
+});
+
+// Display products
+function displayProducts(productsToDisplay) {
+    const productList = document.getElementById("product-list");
+    productList.innerHTML = ""; // Clear current list
+
+    productsToDisplay.forEach(product => {
+        const productDiv = document.createElement("div");
+        productDiv.classList.add("product");
+        productDiv.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>Price: $${product.price.toFixed(2)}</p>
+            <p>${product.description}</p>
+            <p class="rating">Rating: ${"★".repeat(product.rating)}${"☆".repeat(5 - product.rating)}</p>
+            <button class="buy-button">Buy Now</button>
+        `;
+        productList.appendChild(productDiv);
+    });
+}
+
+// Filter products
+function filterProducts() {
+    const selectedCategories = Array.from(document.querySelectorAll('.category:checked')).map(cb => cb.value);
+    const minPrice = parseFloat(document.getElementById('min-price').value) || 0;
+    const maxPrice = parseFloat(document.getElementById('max-price').value) || Infinity;
+    const selectedRating = parseFloat(document.getElementById('rating').value) || 0;
+
+    const filteredProducts = products.filter(product => {
+        const matchesCategory = selectedCategories.length ? selectedCategories.includes(product.category) : true;
+        const matchesPrice = product.price >= minPrice && product.price <= maxPrice;
+        const matchesRating = product.rating >= selectedRating;
+
+        return matchesCategory && matchesPrice && matchesRating;
+    });
+
+    displayProducts(filteredProducts);
+}
+
+// Sort products
+function sortProducts() {
+    const sortCriteria = document.getElementById('sort').value;
+    let sortedProducts = [...products];
+
+    if (sortCriteria === 'price-asc') {
+        sortedProducts.sort((a, b) => a.price - b.price);
+    } else if (sortCriteria === 'price-desc') {
+        sortedProducts.sort((a, b) => b.price - a.price);
+    } else if (sortCriteria === 'rating-desc') {
+        sortedProducts.sort((a, b) => b.rating - a.rating);
+    }
+
+    displayProducts(sortedProducts);
+}
