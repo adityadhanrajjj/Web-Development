@@ -1,0 +1,250 @@
+index.html....................................................................................................................................................................
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TechStore</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>TechStore</h1>
+        <nav>
+            <ul>
+                <li><a href="#products">Products</a></li>
+                <li><a href="#cart">Cart (<span id="cart-count">0</span>)</a></li>
+                <li><a href="#checkout">Checkout</a></li>
+            </ul>
+        </nav>
+        <input type="text" id="search-input" placeholder="Search products..." oninput="searchProducts()">
+    </header>
+
+    <main>
+        <section id="products">
+            <h2>Featured Products</h2>
+            <div id="category-buttons">
+                <button onclick="filterProducts('all')">All</button>
+                <button onclick="filterProducts('laptops')">Laptops</button>
+                <button onclick="filterProducts('smartphones')">Smartphones</button>
+                <button onclick="filterProducts('accessories')">Accessories</button>
+            </div>
+            <div class="product-list" id="product-list"></div>
+        </section>
+
+        <section id="cart" class="hidden">
+            <h2>Your Shopping Cart</h2>
+            <div id="cart-items"></div>
+            <button id="checkout-button">Checkout</button>
+        </section>
+
+        <section id="checkout" class="hidden">
+            <h2>Checkout</h2>
+            <div id="checkout-items"></div>
+            <button id="confirm-checkout">Confirm Purchase</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 TechStore. All rights reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
+
+
+styles.css..................................................................................................................................................................
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+
+header {
+    background: #333;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+}
+
+input[type="text"] {
+    padding: 5px;
+    margin-top: 10px;
+    width: 200px;
+    position: absolute;
+    right: 20px;
+    top: 15px;
+}
+
+.product-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 20px;
+}
+
+.product-item {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 15px;
+    width: 200px;
+    text-align: center;
+}
+
+.product-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+}
+
+button {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #218838;
+}
+
+.hidden {
+    display: none;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: #333;
+    color: white;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+}
+
+
+
+script.js...................................................................................................................................................................
+
+const products = [
+    { id: 1, name: "Laptop", price: 999.99, image: "https://via.placeholder.com/200?text=Laptop", category: "laptops" },
+    { id: 2, name: "Smartphone", price: 599.99, image: "https://via.placeholder.com/200?text=Smartphone", category: "smartphones" },
+    { id: 3, name: "Headphones", price: 199.99, image: "https://via.placeholder.com/200?text=Headphones", category: "accessories" },
+    { id: 4, name: "Smartwatch", price: 299.99, image: "https://via.placeholder.com/200?text=Smartwatch", category: "accessories" },
+    { id: 5, name: "Gaming Laptop", price: 1499.99, image: "https://via.placeholder.com/200?text=Gaming+Laptop", category: "laptops" },
+    { id: 6, name: "Tablet", price: 399.99, image: "https://via.placeholder.com/200?text=Tablet", category: "smartphones" },
+];
+
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+function displayProducts(filteredProducts = products) {
+    const productList = document.getElementById("product-list");
+    productList.innerHTML = ''; // Clear existing products
+    filteredProducts.forEach(product => {
+        const productItem = document.createElement("div");
+        productItem.className = "product-item";
+        productItem.innerHTML = `
+            <img src="${product.image}" alt="${product.name}">
+            <h3>${product.name}</h3>
+            <p>$${product.price.toFixed(2)}</p>
+            <button onclick="addToCart(${product.id})">Add to Cart</button>
+        `;
+        productList.appendChild(productItem);
+    });
+}
+
+function addToCart(productId) {
+    const product = products.find(p => p.id === productId);
+    cart.push(product);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    updateCartCount();
+    alert(`${product.name} has been added to your cart!`);
+}
+
+function updateCartCount() {
+    document.getElementById('cart-count').innerText = cart.length;
+}
+
+function filterProducts(category) {
+    if (category === 'all') {
+        displayProducts(products);
+    } else {
+        const filteredProducts = products.filter(product => product.category === category);
+        displayProducts(filteredProducts);
+    }
+}
+
+function searchProducts() {
+    const searchValue = document.getElementById('search-input').value.toLowerCase();
+    const filteredProducts = products.filter(product => product.name.toLowerCase().includes(searchValue));
+    displayProducts(filteredProducts);
+}
+
+function displayCart() {
+    const cartItemsDiv = document.getElementById("cart-items");
+    cartItemsDiv.innerHTML = ''; // Clear previous items
+    cart.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.innerHTML = `<h4>${item.name}</h4><p>Price: $${item.price.toFixed(2)}</p>`;
+        cartItemsDiv.appendChild(itemDiv);
+    });
+    document.getElementById("cart").classList.remove('hidden');
+}
+
+function displayCheckout() {
+    const checkoutItemsDiv = document.getElementById("checkout-items");
+    checkoutItemsDiv.innerHTML = ''; // Clear previous items
+    cart.forEach(item => {
+        const itemDiv = document.createElement("div");
+        itemDiv.innerHTML = `<h4>${item.name}</h4><p>Price: $${item.price.toFixed(2)}</p>`;
+        checkoutItemsDiv.appendChild(itemDiv);
+    });
+    document.getElementById("checkout").classList.remove('hidden');
+}
+
+document.getElementById('checkout-button').addEventListener('click', () => {
+    displayCheckout();
+    document.getElementById("cart").classList.add('hidden');
+});
+
+document.getElementById('confirm-checkout').addEventListener('click', () => {
+    alert("Thank you for your purchase!");
+    cart = [];
+    localStorage.removeItem('cart');
+    updateCartCount();
+    displayCheckout();
+    document.getElementById("checkout").classList.add('hidden');
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    displayProducts();
+    updateCartCount();
+    if (cart.length > 0) {
+        displayCart();
+    }
+});
+
